@@ -1,4 +1,4 @@
-package com.dobot.doac.domain.order.entities;
+package com.dobot.doac.domain.paymentDivision.entities;
 
 import java.util.UUID;
 
@@ -9,12 +9,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "person_orders")
+@Builder
 @AllArgsConstructor
-public class PersonOrder {
+@NoArgsConstructor
+public class PersonPaymentSplit {
   @Id
   private UUID id;
   @Getter
@@ -22,11 +26,11 @@ public class PersonOrder {
   @Getter
   private Long orderAmount;
   @Getter
-  private Long adjustedAmount;
+  private Long adjustmentAmount;
   @Getter
   private Long paymentAmount;
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", nullable = false)
-  private Order order;
+  private PaymentSplit order;
 }
