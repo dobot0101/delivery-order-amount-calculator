@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.dobot.doac.domain.order.dtos.OrderRequest;
 import com.dobot.doac.domain.order.dtos.OrderResponse;
 import com.dobot.doac.domain.order.dtos.PersonOrderRequest;
@@ -13,6 +15,7 @@ import com.dobot.doac.domain.order.entities.PersonOrder;
 
 import jakarta.transaction.Transactional;
 
+@Service
 public class OrderService {
   private final OrderRepository orderRepository;
 
@@ -26,7 +29,7 @@ public class OrderService {
     Long discountAmount = orderRequest.discountAmount();
     Long adjustedFee = (deliveryFee - discountAmount) / orderRequest.personOrders().size();
 
-    Order order = new Order(UUID.randomUUID(), List.of(), deliveryFee, discountAmount);
+    Order order = new Order(UUID.randomUUID(), deliveryFee, discountAmount, List.of());
     List<PersonOrder> personOrders = new ArrayList<>();
     for (PersonOrderRequest personOrder : orderRequest.personOrders()) {
       Long paymentAmount = personOrder.amount() + adjustedFee;

@@ -7,10 +7,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Entity
+@Table(name = "person_orders")
 @AllArgsConstructor
 public class PersonOrder {
   @Id
@@ -24,7 +26,7 @@ public class PersonOrder {
   @Getter
   private Long paymentAmount;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", nullable = false)
   private Order order;
 }
