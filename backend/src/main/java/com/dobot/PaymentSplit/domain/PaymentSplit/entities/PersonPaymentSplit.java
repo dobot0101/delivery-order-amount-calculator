@@ -1,4 +1,4 @@
-package com.dobot.doac.domain.paymentDivision.entities;
+package com.dobot.PaymentSplit.domain.PaymentSplit.entities;
 
 import java.util.UUID;
 

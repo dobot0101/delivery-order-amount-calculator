@@ -1,12 +1,12 @@
-package com.dobot.doac.domain.paymentDivision;
+package com.dobot.PaymentSplit.domain.PaymentSplit;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dobot.doac.domain.paymentDivision.dtos.PaymentSplitRequest;
-import com.dobot.doac.domain.paymentDivision.dtos.PaymentSplitResponse;
+import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitRequest;
+import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResponse;
 
 import jakarta.validation.Valid;
 
