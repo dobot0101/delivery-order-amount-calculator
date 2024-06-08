@@ -49,9 +49,13 @@
 export default {
   data() {
     return {
-      personOrders: [{ name: '이도현', amount: '10000' }, { name: '송슬기', amount: '20000' }],
-      deliveryFee: '2000',
-      discountAmount: '3000',
+      // 테스트용 데이터 설정
+      // personOrders: [{ name: '이도현', amount: '10000' }, { name: '송슬기', amount: '20000' }],
+      // deliveryFee: '2000',
+      // discountAmount: '3000',
+      personOrders: [{ name: '', amount: '' }],
+      deliveryFee: '',
+      discountAmount: '',
       responseBody: null
     };
   },
