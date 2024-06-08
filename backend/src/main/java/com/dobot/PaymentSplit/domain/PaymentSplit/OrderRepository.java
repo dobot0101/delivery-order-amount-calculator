@@ -5,9 +5,9 @@ import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.dobot.PaymentSplit.domain.PaymentSplit.entities.PaymentSplit;
+import com.dobot.PaymentSplit.domain.PaymentSplit.entities.Order;
 
 @Repository
-public interface PaymentSplitRepository extends CrudRepository<PaymentSplit, UUID> {
+public interface OrderRepository extends CrudRepository<Order, UUID> {
 
 }

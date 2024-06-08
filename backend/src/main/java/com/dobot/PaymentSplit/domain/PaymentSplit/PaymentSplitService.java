@@ -1,5 +1,6 @@
 package com.dobot.PaymentSplit.domain.PaymentSplit;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,16 +11,16 @@ import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitRequest;
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResponse;
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PersonPaymentSplitRequest;
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PersonPaymentSplitResponse;
-import com.dobot.PaymentSplit.domain.PaymentSplit.entities.PaymentSplit;
-import com.dobot.PaymentSplit.domain.PaymentSplit.entities.PersonPaymentSplit;
+import com.dobot.PaymentSplit.domain.PaymentSplit.entities.Order;
+import com.dobot.PaymentSplit.domain.PaymentSplit.entities.OrderLine;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class PaymentSplitService {
-  private final PaymentSplitRepository orderRepository;
+  private final OrderRepository orderRepository;
 
-  public PaymentSplitService(PaymentSplitRepository orderRepository) {
+  public PaymentSplitService(OrderRepository orderRepository) {
     this.orderRepository = orderRepository;
   }
 
@@ -30,15 +31,15 @@ public class PaymentSplitService {
 
     Long adjustmentAmount = (deliveryFee - discountAmount) / orderRequest.personOrders().size();
 
-    var order = PaymentSplit.builder().id(UUID.randomUUID()).deliveryFee(deliveryFee).discountAmount(discountAmount)
+    Order order = Order.builder().id(UUID.randomUUID()).deliveryFee(deliveryFee).discountAmount(discountAmount).createdAt(LocalDateTime.now())
         .build();
-    List<PersonPaymentSplit> personOrders = new ArrayList<>();
+    List<OrderLine> personOrders = new ArrayList<>();
     for (PersonPaymentSplitRequest personOrderRequest : orderRequest.personOrders()) {
       Long paymentAmount = personOrderRequest.amount() + adjustmentAmount;
-      PersonPaymentSplit personOrder = PersonPaymentSplit.builder().id(UUID.randomUUID())
+      OrderLine personOrder = OrderLine.builder().id(UUID.randomUUID())
           .name(personOrderRequest.name())
           .orderAmount(personOrderRequest.amount()).adjustmentAmount(adjustmentAmount).paymentAmount(paymentAmount)
-          .order(order).build();
+          .order(order).createdAt(LocalDateTime.now()).build();
       personOrders
           .add(personOrder);
     }
