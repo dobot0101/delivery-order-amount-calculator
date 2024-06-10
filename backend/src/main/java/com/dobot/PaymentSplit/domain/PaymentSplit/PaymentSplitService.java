@@ -25,33 +25,33 @@ public class PaymentSplitService {
   }
 
   @Transactional
-  public PaymentSplitResponse splitAndChargePayment(PaymentSplitRequest orderRequest) {
-    Long deliveryFee = orderRequest.deliveryFee();
-    Long discountAmount = orderRequest.discountAmount();
+  public PaymentSplitResponse splitAndChargePayment(PaymentSplitRequest paymentSplitRequest) {
+    Long deliveryFee = paymentSplitRequest.deliveryFee();
+    Long discountAmount = paymentSplitRequest.discountAmount();
 
-    Long adjustmentAmount = (deliveryFee - discountAmount) / orderRequest.personOrders().size();
+    Long adjustmentAmount = (deliveryFee - discountAmount) / paymentSplitRequest.orderLines().size();
 
     Order order = Order.builder().id(UUID.randomUUID()).deliveryFee(deliveryFee).discountAmount(discountAmount).createdAt(LocalDateTime.now())
         .build();
-    List<OrderLine> personOrders = new ArrayList<>();
-    for (PersonPaymentSplitRequest personOrderRequest : orderRequest.personOrders()) {
+    List<OrderLine> orderLines = new ArrayList<>();
+    for (PersonPaymentSplitRequest personOrderRequest : paymentSplitRequest.orderLines()) {
       Long paymentAmount = personOrderRequest.amount() + adjustmentAmount;
-      OrderLine personOrder = OrderLine.builder().id(UUID.randomUUID())
+      OrderLine orderLine = OrderLine.builder().id(UUID.randomUUID())
           .name(personOrderRequest.name())
           .orderAmount(personOrderRequest.amount()).adjustmentAmount(adjustmentAmount).paymentAmount(paymentAmount)
           .order(order).createdAt(LocalDateTime.now()).build();
-      personOrders
-          .add(personOrder);
+      orderLines
+          .add(orderLine);
     }
-    order.addPersonOrders(personOrders);
+    order.addOrderLines(orderLines);
 
     this.orderRepository.save(order);
 
-    List<PersonPaymentSplitResponse> personOrderResponses = personOrders.stream()
+    List<PersonPaymentSplitResponse> PersonPaymentSplitResponse = orderLines.stream()
         .map(po -> new PersonPaymentSplitResponse(po.getName(), po.getOrderAmount(), adjustmentAmount,
             po.getPaymentAmount()))
         .toList();
-    return new PaymentSplitResponse(deliveryFee, discountAmount, order.getTotalOrderAmount(), personOrderResponses);
+    return new PaymentSplitResponse(deliveryFee, discountAmount, order.getTotalOrderAmount(), PersonPaymentSplitResponse);
   }
 
 }

@@ -12,16 +12,16 @@ import jakarta.validation.Valid;
 
 @RestController
 public class PaymentSplitController {
-  private final PaymentSplitService orderService;
+  private final PaymentSplitService paymentSplitService;
 
-  public PaymentSplitController(PaymentSplitService orderService) {
-    this.orderService = orderService;
+  public PaymentSplitController(PaymentSplitService paymentSplitService) {
+    this.paymentSplitService = paymentSplitService;
   }
 
   @PostMapping("/split-payment")
   public ResponseEntity<PaymentSplitResponse> splitAndChargePayment(
-      @RequestBody @Valid PaymentSplitRequest orderRequest) {
-    PaymentSplitResponse orderResponse = this.orderService.splitAndChargePayment(orderRequest);
-    return ResponseEntity.ok(orderResponse);
+      @RequestBody @Valid PaymentSplitRequest paymentSplitRequest) {
+    PaymentSplitResponse paymentSplitResponse = this.paymentSplitService.splitAndChargePayment(paymentSplitRequest);
+    return ResponseEntity.ok(paymentSplitResponse);
   }
 }
