@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitRequest;
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResponse;
-import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PersonPaymentSplitRequest;
-import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PersonPaymentSplitResponse;
+import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitRequestOrderLine;
+import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResponseOrderLine;
 import com.dobot.PaymentSplit.domain.PaymentSplit.entities.Order;
 import com.dobot.PaymentSplit.domain.PaymentSplit.entities.OrderLine;
 
@@ -34,7 +34,7 @@ public class PaymentSplitService {
     Order order = Order.builder().id(UUID.randomUUID()).deliveryFee(deliveryFee).discountAmount(discountAmount).createdAt(LocalDateTime.now())
         .build();
     List<OrderLine> orderLines = new ArrayList<>();
-    for (PersonPaymentSplitRequest personOrderRequest : paymentSplitRequest.orderLines()) {
+    for (PaymentSplitRequestOrderLine personOrderRequest : paymentSplitRequest.orderLines()) {
       Long paymentAmount = personOrderRequest.amount() + adjustmentAmount;
       OrderLine orderLine = OrderLine.builder().id(UUID.randomUUID())
           .name(personOrderRequest.name())
@@ -47,8 +47,8 @@ public class PaymentSplitService {
 
     this.orderRepository.save(order);
 
-    List<PersonPaymentSplitResponse> PersonPaymentSplitResponse = orderLines.stream()
-        .map(po -> new PersonPaymentSplitResponse(po.getName(), po.getOrderAmount(), adjustmentAmount,
+    List<PaymentSplitResponseOrderLine> PersonPaymentSplitResponse = orderLines.stream()
+        .map(po -> new PaymentSplitResponseOrderLine(po.getName(), po.getOrderAmount(), adjustmentAmount,
             po.getPaymentAmount()))
         .toList();
     return new PaymentSplitResponse(deliveryFee, discountAmount, order.getTotalOrderAmount(), PersonPaymentSplitResponse);

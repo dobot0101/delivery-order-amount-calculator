@@ -1,6 +1,6 @@
 package com.dobot.PaymentSplit.domain.PaymentSplit.dtos;
 
-public record PersonPaymentSplitResponse(String name,
+public record PaymentSplitResponseOrderLine(String name,
         Long orderAmount,
         Long adjustedAmount,
         Long paymentAmount) {

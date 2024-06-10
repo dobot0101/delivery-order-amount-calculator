@@ -5,7 +5,7 @@
     <div class="row d-flex justify-content-center">
       <div class="col">
         <form @submit.prevent="handleSubmit" class="mb-3">
-          <div v-for="(order, index) in personOrders" :key="index" class="mb-2">
+          <div v-for="(order, index) in orderLines" :key="index" class="mb-2">
             <div class="form-group">
               <input type="text" v-model="order.name" placeholder="이름" class="form-control" />
             </div>
@@ -31,7 +31,7 @@
       <div class="col">
         <div v-if="responseBody">
           <h3 class="my-3">정산 결과</h3>
-          <div v-for="(order) in responseBody.personOrders" class="card mb-3">
+          <div v-for="(order) in responseBody.orderLines" class="card mb-3">
             <div class="card-body">
               <h5 class="card-title">{{ order.name }}</h5>
               <p class="card-text">주문금액: {{ order.orderAmount }}</p>
@@ -50,10 +50,10 @@ export default {
   data() {
     return {
       // 테스트용 데이터 설정
-      // personOrders: [{ name: '이도현', amount: '10000' }, { name: '송슬기', amount: '20000' }],
+      // orderLines: [{ name: '이도현', amount: '10000' }, { name: '송슬기', amount: '20000' }],
       // deliveryFee: '2000',
       // discountAmount: '3000',
-      personOrders: [{ name: '', amount: '' }],
+      orderLines: [{ name: '', amount: '' }],
       deliveryFee: '',
       discountAmount: '',
       responseBody: null
@@ -61,13 +61,13 @@ export default {
   },
   methods: {
     handleAddOrder() {
-      this.personOrders.push({ name: '', amount: '' });
+      this.orderLines.push({ name: '', amount: '' });
     },
     handleRemoveLastOrder(index) {
-      this.personOrders.splice(index, 1);
+      this.orderLines.splice(index, 1);
     },
     async handleSubmit() {
-      const payload = { personOrders: this.personOrders, deliveryFee: this.deliveryFee, discountAmount: this.discountAmount };
+      const payload = { orderLines: this.orderLines, deliveryFee: this.deliveryFee, discountAmount: this.discountAmount };
       const response = await fetch('http://localhost:8080/split-payment', {
         method: 'POST',
         headers: {
@@ -80,7 +80,14 @@ export default {
         console.log('API 요청 성공', responseBody);
         this.responseBody = responseBody;
       } else {
-        console.error('API 요청 실패');
+        const responseBody = await response.json();
+        if (responseBody.validationErrors && responseBody.validationErrors.length > 0) {
+          for (const error of responseBody.validationErrors) {
+            console.error(error.field, error.message);
+          }
+        } else {
+          console.error('API 요청 실패');
+        }
       }
     },
   },

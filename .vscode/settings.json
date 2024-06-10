@@ -1,5 +1,6 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.import.gradle.java.home": "/home/linuxbrew/.linuxbrew/Cellar/openjdk/21.0.2",
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
 }
