@@ -8,9 +8,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitRequest;
-import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResponse;
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitRequestOrderLine;
-import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResponseOrderLine;
+import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResult;
+import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResultOrderLine;
 import com.dobot.PaymentSplit.domain.PaymentSplit.entities.Order;
 import com.dobot.PaymentSplit.domain.PaymentSplit.entities.OrderLine;
 
@@ -25,13 +25,14 @@ public class PaymentSplitService {
   }
 
   @Transactional
-  public PaymentSplitResponse splitAndChargePayment(PaymentSplitRequest paymentSplitRequest) {
+  public PaymentSplitResult splitAndChargePayment(PaymentSplitRequest paymentSplitRequest) {
     Long deliveryFee = paymentSplitRequest.deliveryFee();
     Long discountAmount = paymentSplitRequest.discountAmount();
 
     Long adjustmentAmount = (deliveryFee - discountAmount) / paymentSplitRequest.orderLines().size();
 
-    Order order = Order.builder().id(UUID.randomUUID()).deliveryFee(deliveryFee).discountAmount(discountAmount).createdAt(LocalDateTime.now())
+    Order order = Order.builder().id(UUID.randomUUID()).deliveryFee(deliveryFee).discountAmount(discountAmount)
+        .createdAt(LocalDateTime.now())
         .build();
     List<OrderLine> orderLines = new ArrayList<>();
     for (PaymentSplitRequestOrderLine personOrderRequest : paymentSplitRequest.orderLines()) {
@@ -47,11 +48,12 @@ public class PaymentSplitService {
 
     this.orderRepository.save(order);
 
-    List<PaymentSplitResponseOrderLine> PersonPaymentSplitResponse = orderLines.stream()
-        .map(po -> new PaymentSplitResponseOrderLine(po.getName(), po.getOrderAmount(), adjustmentAmount,
-            po.getPaymentAmount()))
+    List<PaymentSplitResultOrderLine> PersonPaymentSplitResult = orderLines.stream()
+        .map(orderLine -> new PaymentSplitResultOrderLine(orderLine.getName(), orderLine.getOrderAmount(),
+            adjustmentAmount,
+            orderLine.getPaymentAmount()))
         .toList();
-    return new PaymentSplitResponse(deliveryFee, discountAmount, order.getTotalOrderAmount(), PersonPaymentSplitResponse);
+    return new PaymentSplitResult(deliveryFee, discountAmount, order.getTotalOrderAmount(), PersonPaymentSplitResult);
   }
 
 }

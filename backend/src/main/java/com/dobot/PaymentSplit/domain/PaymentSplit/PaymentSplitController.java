@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitRequest;
-import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResponse;
+import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResult;
 
 import jakarta.validation.Valid;
 
@@ -19,9 +19,9 @@ public class PaymentSplitController {
   }
 
   @PostMapping("/split-payment")
-  public ResponseEntity<PaymentSplitResponse> splitAndChargePayment(
+  public ResponseEntity<PaymentSplitResult> splitAndChargePayment(
       @RequestBody @Valid PaymentSplitRequest paymentSplitRequest) {
-    PaymentSplitResponse paymentSplitResponse = this.paymentSplitService.splitAndChargePayment(paymentSplitRequest);
-    return ResponseEntity.ok(paymentSplitResponse);
+    PaymentSplitResult paymentSplitResult = this.paymentSplitService.splitAndChargePayment(paymentSplitRequest);
+    return ResponseEntity.ok(paymentSplitResult);
   }
 }
