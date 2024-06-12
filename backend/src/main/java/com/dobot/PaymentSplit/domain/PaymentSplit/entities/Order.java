@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -18,8 +19,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+// 접근 제한자를 private으로 하여 빌더 패턴 강제
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+// JPA가 기본 생성자로 엔티티의 인스턴스화를 하기 때문에 기본 생성자를 protected 이상으로 설정
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
 public class Order {
   @Id
