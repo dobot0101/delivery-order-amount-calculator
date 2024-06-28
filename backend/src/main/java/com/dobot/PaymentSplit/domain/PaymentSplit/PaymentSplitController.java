@@ -9,14 +9,12 @@ import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitRequest;
 import com.dobot.PaymentSplit.domain.PaymentSplit.dtos.PaymentSplitResult;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 public class PaymentSplitController {
   private final PaymentSplitService paymentSplitService;
-
-  public PaymentSplitController(PaymentSplitService paymentSplitService) {
-    this.paymentSplitService = paymentSplitService;
-  }
 
   @PostMapping("/split-payment")
   public ResponseEntity<PaymentSplitResult> splitAndChargePayment(

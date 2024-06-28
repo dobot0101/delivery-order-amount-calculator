@@ -15,14 +15,12 @@ import com.dobot.PaymentSplit.domain.PaymentSplit.entities.Order;
 import com.dobot.PaymentSplit.domain.PaymentSplit.entities.OrderLine;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentSplitService {
   private final OrderRepository orderRepository;
-
-  public PaymentSplitService(OrderRepository orderRepository) {
-    this.orderRepository = orderRepository;
-  }
 
   @Transactional
   public PaymentSplitResult splitAndChargePayment(PaymentSplitRequest paymentSplitRequest) {
